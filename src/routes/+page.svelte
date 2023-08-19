@@ -14,7 +14,8 @@
 			title: 'Check out shadcn-svelte',
 			id: crypto.randomUUID(),
 			done: false,
-			edit: undefined as string | undefined
+			edit: undefined as string | undefined,
+			editInputRef: undefined as HTMLInputElement | undefined
 		}
 	];
 
@@ -28,7 +29,8 @@
 			title: new_todo,
 			id: crypto.randomUUID(),
 			done: false,
-			edit: undefined
+			edit: undefined,
+			editInputRef: undefined
 		});
 		todos = todos;
 		new_todo = '';
@@ -48,8 +50,10 @@
 					{todo.title}
 				</Label>
 				<Button
-					on:click={() => {
+					on:click={async () => {
 						todo.edit = todo.title;
+						await tick();
+						todo.editInputRef?.select();
 					}}
 					variant="ghost"
 					size="icon"
@@ -68,7 +72,17 @@
 				<Label for={todo.id}>
 					<Pencil />
 				</Label>
-				<Input bind:value={todo.edit} class="grow" />
+				<Input
+					bind:value={todo.edit}
+					class="grow"
+					bind:ref={todo.editInputRef}
+					on:keydown={(e) => {
+						if (e.key === 'Escape') {
+							todo.title = todo.edit + '';
+							todo.edit = undefined;
+						}
+					}}
+				/>
 				<Button
 					on:click={() => {
 						todo.title = todo.edit + '';
