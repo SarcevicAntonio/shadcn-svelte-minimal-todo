@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AlertDialog from '$lib/components/ui/alert-dialog/AlertDialog.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Input } from '$lib/components/ui/input';
@@ -50,14 +51,12 @@
 					}}
 					variant="outline">Edit</Button
 				>
-				<Button
-					on:click={() => {
+				<AlertDialog
+					triggerVariant="outline"
+					on:confirm={() => {
 						todos = todos.filter((t) => t.id !== todo.id);
 					}}
-					variant="destructive"
-				>
-					Delete
-				</Button>
+				/>
 			{:else}
 				<Label for={todo.id}>Edit:</Label>
 				<Input bind:value={todo.edit} class="grow" />

@@ -33,6 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@melt-ui/svelte": "^0.37.4",
 		"bits-ui": "^0.0.24",
 		"clsx": "^2.0.0",
 		"lucide-svelte": "^0.268.0",
