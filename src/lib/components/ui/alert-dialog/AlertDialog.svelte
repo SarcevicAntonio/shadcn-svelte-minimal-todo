@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createDialog, melt } from '@melt-ui/svelte';
 	import { X } from 'lucide-svelte';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 	import type { Variant } from '../button';
 	import Button from '../button/button.svelte';
@@ -56,7 +56,8 @@
 				<Button builders={[$close]} variant="outline">Cancel</Button>
 				<Button
 					builders={[$close]}
-					on:click={() => {
+					on:click={async () => {
+						$open = false;
 						dispatch('confirm');
 					}}
 					variant={confirmVariant}>Confirm</Button
