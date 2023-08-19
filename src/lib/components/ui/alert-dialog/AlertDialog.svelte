@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { createDialog, melt } from '@melt-ui/svelte';
 	import { X } from 'lucide-svelte';
-	import { createEventDispatcher, tick } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 	import type { Variant } from '../button';
-	import Button from '../button/button.svelte';
+	import Button, { type ButtonProps } from '../button/button.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -14,13 +14,13 @@
 	} = createDialog({ role: 'alertdialog' });
 
 	export let excludeTrigger = false;
-	export let triggerVariant: Variant = 'default';
+	export let triggerProps: ButtonProps = { variant: 'default' };
 	export let triggerLabel = 'Delete';
-	export let confirmVariant: Variant = 'destructive';
+	export let confirmProps: ButtonProps = { variant: 'destructive' };
 </script>
 
 {#if !excludeTrigger}
-	<Button builders={[$trigger]} variant={triggerVariant}>
+	<Button builders={[$trigger]} {...triggerProps}>
 		<slot name="trigger-label">{triggerLabel}</slot>
 	</Button>
 {/if}
@@ -60,7 +60,7 @@
 						$open = false;
 						dispatch('confirm');
 					}}
-					variant={confirmVariant}>Confirm</Button
+					{...confirmProps}>Confirm</Button
 				>
 			</div>
 

@@ -4,6 +4,7 @@
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import { Pencil, Trash2 } from 'lucide-svelte';
 	import { tick } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { fade } from 'svelte/transition';
@@ -50,23 +51,32 @@
 					on:click={() => {
 						todo.edit = todo.title;
 					}}
-					variant="outline">Edit</Button
+					variant="ghost"
+					size="icon"
 				>
+					<Pencil />
+				</Button>
 				<AlertDialog
-					triggerVariant="outline"
+					triggerProps={{ variant: 'ghost', size: 'icon', class: 'text-red-700' }}
 					on:confirm={() => {
 						todos = todos.filter((t) => t.id !== todo.id);
 					}}
-				/>
+				>
+					<Trash2 slot="trigger-label" />
+				</AlertDialog>
 			{:else}
-				<Label for={todo.id}>Edit:</Label>
+				<Label for={todo.id}>
+					<Pencil />
+				</Label>
 				<Input bind:value={todo.edit} class="grow" />
 				<Button
 					on:click={() => {
 						todo.title = todo.edit + '';
 						todo.edit = undefined;
-					}}>Confirm</Button
+					}}
 				>
+					Confirm
+				</Button>
 				<Button
 					on:click={() => {
 						todo.edit = undefined;
