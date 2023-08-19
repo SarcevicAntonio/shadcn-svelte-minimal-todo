@@ -1,2 +1,81 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	import { Checkbox } from '$lib/components/ui/checkbox';
+	import { Input } from '$lib/components/ui/input';
+	import { Label } from '$lib/components/ui/label';
+	import { flip } from 'svelte/animate';
+	import { fade } from 'svelte/transition';
+
+	let todos = [
+		{
+			title: 'Check out shadcn-svelte',
+			id: crypto.randomUUID(),
+			done: false,
+			edit: undefined as string | undefined
+		}
+	];
+
+	let new_todo = '';
+</script>
+
+<form
+	on:submit|preventDefault={() => {
+		if (!new_todo.trim().length) return;
+		todos.push({
+			title: new_todo,
+			id: crypto.randomUUID(),
+			done: false,
+			edit: undefined
+		});
+		todos = todos;
+		new_todo = '';
+	}}
+	class="mb-4"
+>
+	<Label>Create a new Todo:</Label>
+	<Input bind:value={new_todo} />
+</form>
+
+<ul class="flex flex-col gap-3">
+	{#each todos as todo (todo.id)}
+		<li class="flex items-center space-x-2" transition:fade animate:flip>
+			{#if typeof todo.edit !== 'string'}
+				<Checkbox id={todo.id} bind:checked={todo.done} />
+				<Label for={todo.id} class="grow {todo.done ? 'line-through opacity-60' : ''}">
+					{todo.title}
+				</Label>
+				<Button
+					on:click={() => {
+						todo.edit = todo.title;
+					}}
+					variant="outline">Edit</Button
+				>
+				<Button
+					on:click={() => {
+						todos = todos.filter((t) => t.id !== todo.id);
+					}}
+					variant="destructive"
+				>
+					Delete
+				</Button>
+			{:else}
+				<Label for={todo.id}>Edit:</Label>
+				<Input bind:value={todo.edit} class="grow" />
+				<Button
+					on:click={() => {
+						todo.title = todo.edit + '';
+						todo.edit = undefined;
+					}}>Confirm</Button
+				>
+				<Button
+					on:click={() => {
+						todo.edit = undefined;
+					}}
+					variant="outline"
+				>
+					Cancel
+				</Button>
+			{/if}
+		</li>
+	{/each}
+</ul>
